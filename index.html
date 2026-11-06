@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Traffic Light</title>
+</head>
+
+<body>
+
+    <h1>🚦 Traffic Light Control</h1>
+
+    <button onclick="connect()">Connect Arduino</button>
+
+    <br><br>
+
+    <button onclick="send('R')">🔴 Red</button>
+    <button onclick="send('Y')">🟡 Yellow</button>
+    <button onclick="send('G')">🟢 Green</button>
+    <button onclick="send('O')">OFF</button>
+
+    <p id="status">Not Connected</p>
+
+    <script>
+
+        let port;
+        let writer;
+
+        async function connect() {
+
+            port = await navigator.serial.requestPort();
+
+            await port.open({ baudRate: 9600 });
+
+            writer = port.writable.getWriter();
+
+            document.getElementById("status").innerText =
+                "Arduino Connected!";
+
+        }
+
+        async function send(command) {
+
+            if (!writer) {
+                alert("Connect Arduino First!");
+                return;
+            }
+
+            await writer.write(
+                new TextEncoder().encode(command)
+            );
+
+        }
+
+    </script>
+
+</body>
+</html>
